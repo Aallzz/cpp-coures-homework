@@ -43,6 +43,7 @@ push rcx
 
 mov             r10, rcx
 add             r10, 1
+mov             r13, r11
 
 .loop:
 
@@ -68,10 +69,7 @@ call            div_long_short
 .neg_cond:
 lea             rsi, [rsi + 8]
 
-mov             rbx, 4294967296
-call            mul_long_short
-mov             rbx, 4294967296
-call            mul_long_short
+lea             r11, [r11 + 8]
 
 dec             r10
 
@@ -83,7 +81,7 @@ jnz             .loop
 pop             rcx
 pop             rdi
 pop             rsi
-lea             rdi, [r11]
+lea             rdi, [r13]
 ret
 
 
