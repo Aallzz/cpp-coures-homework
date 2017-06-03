@@ -19,7 +19,6 @@ mov             rcx, 256
 call            set_zero
 mov             rdi, r11
 
-mov             rcx, 128
 lea             r11, [rsp]
 call            mul_long_long
 
@@ -43,7 +42,6 @@ push rdi
 push rcx
 
 mov             r10, rcx
-add             r10, 1
 mov             r13, r11
 
 .loop:
