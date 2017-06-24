@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="BIGINT_SMALL_OBJECT_OPTIMIZATION" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="big_integer_small_optimization">
+         <Option output="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/big_integer_small_optimization" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 big_integer_small_optimization" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="big_integer_small_optimization/fast">
+         <Option output="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/big_integer_small_optimization" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 big_integer_small_optimization/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/cpp-course/bigint_small_obj_opt/build-BIGINT_SMALL_OBJECT_OPTIMIZATION-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/big_integer.cpp">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/big_integer.h">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/big_integer_testing.cpp">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/gtest/gtest-all.cc">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/gtest/gtest.h">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/gtest/gtest_main.cc">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/opt_vector.cpp">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/opt_vector.h">
+         <Option target="big_integer_small_optimization"/>
+      </Unit>
+      <Unit filename="/home/alexander/cpp-course/bigint_small_obj_opt/BIGINT_SMALL_OBJECT_OPTIMIZATION/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
