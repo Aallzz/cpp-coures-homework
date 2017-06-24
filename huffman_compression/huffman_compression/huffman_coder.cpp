@@ -17,6 +17,7 @@ huffman_coder::~huffman_coder() {
 }
 
 void huffman_coder::clear_tree(huffmantree *&t) {
+    if (!t) return ;
     if (t->left) clear_tree(t->left);
     if (t->right) clear_tree(t->right);
     delete t;
