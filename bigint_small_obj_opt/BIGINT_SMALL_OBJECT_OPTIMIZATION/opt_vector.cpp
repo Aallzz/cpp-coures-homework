@@ -25,9 +25,7 @@ opt_vector::opt_vector(const opt_vector &other) {
 
 opt_vector::~opt_vector() {
     if (!is_small && !is_empty) {
-        if (long_number.unique()) {
-            long_number.reset();
-        }
+        long_number.reset();
     }
 }
 
