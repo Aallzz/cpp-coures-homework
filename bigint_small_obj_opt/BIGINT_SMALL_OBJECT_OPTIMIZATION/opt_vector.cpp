@@ -26,7 +26,7 @@ opt_vector::opt_vector(const opt_vector &other) {
 
 opt_vector::~opt_vector() {
     if (!is_small && !is_empty) {
-        long_number.reset();
+        long_number.~shared_ptr<std::vector<uint32_t>>();
     }
 }
 
@@ -70,15 +70,12 @@ opt_vector& opt_vector::operator =(opt_vector const& other) {
 
     if (other.is_small) {
         if (!original_small && !original_empty) {
-            long_number.reset();
+            long_number.~shared_ptr<std::vector<uint32_t>>();
         }
         number = other.number;
     } else {
         if (!original_small && !original_empty && long_number == other.long_number) {
             return *this;
-        }
-        if (!original_empty && !original_small && long_number.unique()) {
-            long_number.reset();
         }
         if (original_small) {
             new (&long_number) std::shared_ptr<std::vector<uint32_t>>();
@@ -124,8 +121,8 @@ void opt_vector::pop_back() {
         long_number->pop_back();
         if (long_number->size() == 1) {
             uint32_t cur = (*long_number)[0];
-            long_number.reset();
-//            long_number.~shared_ptr<std::vector<uint32_t>>();
+//            long_number.reset();
+            long_number.~shared_ptr<std::vector<uint32_t>>();
             number = cur;
             is_small = true;
         }
