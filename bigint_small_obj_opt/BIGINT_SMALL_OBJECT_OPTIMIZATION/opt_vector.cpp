@@ -19,6 +19,7 @@ opt_vector::opt_vector(const opt_vector &other) {
     if (other.is_small) {
         number = other.number;
     } else {
+        new (&long_number) std::shared_ptr<std::vector<uint32_t>>();
         long_number = other.long_number;
     }
 }
@@ -62,14 +63,25 @@ uint32_t const& opt_vector::operator [](size_t pos) const {
 }
 
 opt_vector& opt_vector::operator =(opt_vector const& other) {
+    bool original_small = is_small;
+    bool original_empty = is_empty;
     is_small = other.is_small;
     is_empty = other.is_empty;
 
     if (other.is_small) {
+        if (!original_small && !original_empty) {
+            long_number.reset();
+        }
         number = other.number;
     } else {
-        if (long_number.unique()) {
+        if (!original_small && !original_empty && long_number == other.long_number) {
+            return *this;
+        }
+        if (!original_empty && !original_small && long_number.unique()) {
             long_number.reset();
+        }
+        if (original_small) {
+            new (&long_number) std::shared_ptr<std::vector<uint32_t>>();
         }
         long_number = other.long_number;
     }
@@ -91,8 +103,7 @@ void opt_vector::push_back(const uint32_t &a) {
     } else {
         if (is_small) {
             uint32_t cur = number;
-
-            long_number = std::make_shared<std::vector<uint32_t>>();
+            new (&long_number) std::shared_ptr<std::vector<uint32_t>>(std::make_shared<std::vector<uint32_t>>());
             long_number->push_back(cur);
             long_number->push_back(a);
             is_small = false;
@@ -114,6 +125,7 @@ void opt_vector::pop_back() {
         if (long_number->size() == 1) {
             uint32_t cur = (*long_number)[0];
             long_number.reset();
+//            long_number.~shared_ptr<std::vector<uint32_t>>();
             number = cur;
             is_small = true;
         }
@@ -128,4 +140,3 @@ void opt_vector::update() {
     std::shared_ptr<std::vector<uint32_t>> long_num = std::make_shared<std::vector<uint32_t>>(*long_number);
     long_number.swap(long_num);
 }
-
