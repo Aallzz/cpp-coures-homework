@@ -74,13 +74,11 @@ opt_vector& opt_vector::operator =(opt_vector const& other) {
         }
         number = other.number;
     } else {
-        if (!original_small && !original_empty && long_number == other.long_number) {
-            return *this;
-        }
         if (original_small) {
-            new (&long_number) std::shared_ptr<std::vector<uint32_t>>();
+            new (&long_number) std::shared_ptr<std::vector<uint32_t>>(other.long_number);
+        } else {
+            long_number = other.long_number;
         }
-        long_number = other.long_number;
     }
 
     return *this;
