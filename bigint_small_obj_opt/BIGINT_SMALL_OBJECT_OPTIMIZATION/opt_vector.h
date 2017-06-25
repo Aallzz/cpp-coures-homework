@@ -25,10 +25,12 @@ struct opt_vector {
     void pop_back();
 
 private:
-    
+
+    union {
         uint32_t number;
         std::shared_ptr<std::vector<uint32_t>> long_number;
-    
+    };
+
     bool is_small;
     bool is_empty;
 
@@ -36,4 +38,3 @@ private:
 };
 
 #endif // OPT_VECTOR
-
