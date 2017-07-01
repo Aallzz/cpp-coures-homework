@@ -207,7 +207,7 @@ void initialize_data(T* distance, T* source, size_t sz) {
 }
 
 template<typename T>
-void deque<T>::swap(deque<T> &a, deque<T> &b) {
+void swap(deque<T>& a, deque<T>& b) {
     std::swap(a.p, b.p);
     std::swap(a.start, b.start);
     std::swap(a.sz, b.sz);
