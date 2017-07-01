@@ -394,12 +394,6 @@ void deque<T>::ensure_capacity(int new_capacity) {
 
     if (new_capacity != 0) {
         temp.p = static_cast<T*>(operator new(new_capacity * sizeof(T)));
-//        if (start + sz <= capacity) {
-//            initialize_data(temp.p, p + start, sz);
-//        } else {
-//            initialize_data(temp.p, p + start, capacity - start);
-//            initialize_data(temp.p + capacity - start, p, sz - (capacity - start));
-//        }
         temp.capacity = new_capacity;
         temp.start = 0;
         temp.sz = sz;
