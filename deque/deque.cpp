@@ -297,7 +297,7 @@ typename deque<T>::iterator deque<T>::erase(const iterator it) {
     if (dist1 > dist2) {
         size_t pos = it.id + 1;
         if (iit > begin()) {
-            while (iit - 1 != begin()) {
+            while (iit != begin()) {
                 std::swap(*iit, *(iit - 1));
                 iit--;
             }
