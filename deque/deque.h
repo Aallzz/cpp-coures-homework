@@ -99,19 +99,35 @@ struct deque {
             }
         }
 
-        bool operator == (deque_iterator const& q) const {
+        bool operator == (deque_iterator<T>& q) const {
             return (q.cap == cap && q.cur == cur && q.id == id && q.p == p && q.sz == sz && q.start == start);
         }
 
-        bool operator > (deque_iterator const& q) const {
+        bool operator == (deque_iterator<const T>& q) const {
+            return (q.cap == cap && q.cur == cur && q.id == id && q.p == p && q.sz == sz && q.start == start);
+        }
+
+        bool operator > (deque_iterator<T> const& q) const {
             return q < *this;
         }
 
-        bool operator <= (deque_iterator const& q) const {
+        bool operator > (deque_iterator<const T> const& q) const {
+            return q < *this;
+        }
+
+        bool operator <= (deque_iterator<T> const& q) const {
             return !(*this > q);
         }
 
-        bool operator >= (deque_iterator const& q) const {
+        bool operator <= (deque_iterator<const T> const& q) const {
+            return !(*this > q);
+        }
+
+        bool operator >= (deque_iterator<T> const& q) const {
+            return !(*this < q);
+        }
+
+        bool operator >= (deque_iterator<const T> const& q) const {
             return !(*this < q);
         }
 
@@ -141,6 +157,7 @@ struct deque {
         V & operator*() const {
             return *cur;
         }
+
 
         friend bool operator!=(deque_iterator a, deque_iterator b) {
             return a.cur != b.cur;
@@ -430,21 +447,25 @@ void clear_data(T* data, size_t sz, typename std::enable_if<std::is_trivially_de
 
 template<typename T>
 typename deque<T>::iterator deque<T>::begin() {
+    if (!p) return  iterator(p, p, capacity, start, sz, start);
     return iterator(p + start, p, capacity, start, sz, start);
 }
 
 template<typename T>
 typename deque<T>::const_iterator deque<T>::begin() const {
+    if (!p) return const_iterator(p, p, capacity, start, sz, start);
     return const_iterator(p + start, p, capacity, start, sz, start);
 }
 
 template<typename T>
 typename deque<T>::iterator deque<T>::end() {
+    if (!p) return iterator(p, p, capacity, start + sz, sz, start);
     return iterator(p + (start + sz) % capacity, p, capacity, (start + sz) % capacity, sz, start);
 }
 
 template<typename T>
 typename deque<T>::const_iterator deque<T>::end() const {
+    if (!p) return const_iterator(p, p, capacity, start + sz, sz, start);
     return const_iterator(p + (start + sz) % capacity, p, capacity, (start + sz) % capacity, sz, start);
 }
 
