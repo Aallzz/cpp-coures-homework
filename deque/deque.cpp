@@ -274,6 +274,7 @@ typename deque<T>::iterator deque<T>::insert(const iterator it, const T& element
     T temp = element;
     iterator iit(it);
     if (dist1 >= dist2) {
+        iit--;
         while (iit + 1 != begin() && iit != end()) {
             std::swap(*iit, temp);
             iit--;
