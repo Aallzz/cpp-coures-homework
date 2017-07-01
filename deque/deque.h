@@ -194,10 +194,8 @@ struct deque {
     reverse_iterator rend();
     const_reverse_iterator rend() const;
 
-
-    void swap(deque<T>& a, deque<T>& b);
-    //friend void swap(deque<T>& a, deque<T>& b);
-    //friend void initialize_data(T* distance, T* source, size_t sz);
+    template <typename TT>
+    friend void swap(deque<TT>& a, deque<TT>& b);
 private:
     T *p{nullptr};
     size_t start{0};
