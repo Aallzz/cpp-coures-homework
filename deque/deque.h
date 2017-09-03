@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 namespace exam {
 
@@ -235,6 +236,7 @@ struct list {
             invalid_node_iterators(cur);
             cur = cur->right;
         }
+        std::cout << (pos.current == nullptr) << std::endl;
         assert(cur == pos.current->left);
     }
 
@@ -281,6 +283,18 @@ struct list {
         swap(lhs.sz, rhs.sz);
     }
 
+    friend std::ostream& operator << (std::ostream& cout, list const& data) {
+        cout << "[";
+        snode* cur = data.start;
+        while (cur != data.finish) {
+            cout << static_cast<node*>(cur)->value;
+            cur = cur->right;
+            if (cur != data.finish)
+                cout << ", ";
+        }
+        cout << "]";
+    }
+
     ~list() {
         snode*& cur = start;
         while (cur != finish) {
@@ -290,6 +304,7 @@ struct list {
         }
         delete cur;
     }
+
 
 private:
     struct snode {
