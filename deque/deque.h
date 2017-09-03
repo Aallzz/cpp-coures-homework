@@ -293,6 +293,7 @@ struct list {
                 cout << ", ";
         }
         cout << "]";
+        return cout;
     }
 
     ~list() {
