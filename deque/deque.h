@@ -1,539 +1,490 @@
-#ifndef DEQUE
+#ifndef LIST_H
+#define LIST_H
 
-#define DEQUE
-
-#include <type_traits>
 #include <iterator>
-#include <cstddef>
+#include <vector>
+#include <type_traits>
 #include <cassert>
+#include <algorithm>
+
+namespace exam {
 
 template<typename T>
-struct deque {
+struct list {
 
-    template<typename V>
-    struct deque_iterator {
+    template<typename TT>
+    struct iterator_impl;
 
-        T *cur;
-        T *p;
-        size_t cap;
-        size_t id;
-        size_t sz;
-        size_t start;
+    using iterator = iterator_impl<T>;
+    using const_iterator = iterator_impl<const T>;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-        deque_iterator(T *cur, T* p, size_t cap, size_t id, size_t sz, size_t start)
-            : cur(cur),
-              p(p),
-              cap(cap),
-              id(id),
-              sz(sz),
-              start(start)
-        {}
+    list() { // without precondition
+        start = finish = new snode;
+        assert(start != nullptr);
+        assert(start->left == nullptr && start->right == nullptr);
+    }
 
-        deque_iterator(deque_iterator const& other)
-            : cur(other.cur),
-              p(other.p),
-              cap(other.cap),
-              id(other.id),
-              sz(other.sz),
-              start(other.start)
-        {}
+    list(list const& other) : // without precondition
+        sz(other.sz)
+    {
+        snode* cur = other.start;
+        snode* prev_node{};
 
-        template <typename U>
-        deque_iterator(const deque_iterator<U> &data,
-            typename std::enable_if<std::is_same<V, const U>::value>::type* = nullptr)
-            : cur(data.cur)
-        {}
-
-        deque_iterator& operator +=(int a) {
-            (id += a) %= cap;
-            cur = p + id;
-            return *this;
+        while (cur != other.finish) {
+            snode* nnode = static_cast<snode*>(new node(static_cast<node*>(cur)));
+            assert(nnode != nullptr);
+            if (cur == other.start)
+                start = nnode;
+            else
+                prev_node->right = nnode;
+            nnode->left = prev_node;
+            cur = cur->right;
+            prev_node = nnode;
         }
 
-        friend deque_iterator operator +(int c, deque_iterator const& p) {
-            deque_iterator k(p);
-            return k += c;
-        }
+        finish = new snode(other.finish);
 
-        deque_iterator& operator +(int c) const{
-            deque_iterator k(*this);
-            return k += c;
-        }
+        finish->left = prev_node;
+        if (prev_node) prev_node->right = finish;
+    }
 
-        deque_iterator& operator -=(int a) {
-            (id += cap - a) %= cap;
-            cur = p + id;
-            return *this;
-        }
-
-        deque_iterator& operator -(int c) const{
-            deque_iterator k(*this);
-            return k -= c;
-        }
-
-        ptrdiff_t operator -(deque_iterator const& q) const{
-            if (start + sz <= cap) {
-                return id - q.id;
-            } else {
-                return (id - start) + (cap - q.id);
-            }
-        }
-
-        deque_iterator& operator++() {
-            cur++;
-            id++;
-            if (cur == p + cap)
-                cur = p, id = 0;
-            return *this;
-        }
-
-        ptrdiff_t operator +(deque_iterator const& q) const {
-            return q.id - this->id;
-        }
-
-        bool operator < (deque_iterator const& q) const {
-            if (start + sz <= cap) {
-                return id < q.id;
-            } else {
-                return id > q.id;
-            }
-        }
-
-        template <typename TT>
-        bool operator == (deque_iterator<TT> const& q) const {
-            return (q.cap == cap && q.cur == cur && q.id == id && q.p == p && q.sz == sz && q.start == start);
-        }
-
-        template <typename TT>
-        bool operator > (deque_iterator const& q) const {
-            return q < *this;
-        }
-
-        template <typename TT>
-        bool operator <= (deque_iterator const& q) const {
-            return !(*this > q);
-        }
-
-        template <typename TT>
-        bool operator >= (deque_iterator const& q) const {
-            return !(*this < q);
-        }
-
-        deque_iterator& operator--() {
-            if (cur == p) {
-                cur = cur + cap - 1;
-                id = cap - 1;
-            } else {
-                cur--;
-                id--;
-            }
-            return *this;
-        }
-
-        deque_iterator operator++(int) {
-            deque_iterator was(*this);
-            ++(*this);
-            return was;
-        }
-
-        deque_iterator operator--(int) {
-            deque_iterator was(*this);
-            --(*this);
-            return was;
-        }
-
-        V & operator*() const {
-            return *cur;
-        }
-
-        friend bool operator!=(deque_iterator a, deque_iterator b) {
-            return a.cur != b.cur;
-        }
-
-        typedef std::ptrdiff_t difference_type;
-        typedef V value_type;
-        typedef V* pointer;
-        typedef V& reference;
-        typedef std::bidirectional_iterator_tag iterator_category;
-
-    };
-
-    typedef deque_iterator<T> iterator;
-    typedef deque_iterator<const T> const_iterator;
-    typedef std::reverse_iterator<iterator> reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-
-    deque();
-    deque(deque const& other);
-
-    ~deque();
-
-    deque& operator =(deque const& other);
-    T& operator [](size_t pos);
-    T const& operator[](size_t pos) const;
-
-    bool empty() const;
-    size_t size() const;
-
-    void clear();
-
-    void push_back(T const& element);
-    void push_front(T const& element);
-    void pop_back();
-    void pop_front();
-
-    T const& front() const;
-    T& front();
-    T const& back() const;
-    T& back();
-
-    iterator insert(const iterator pos, T const& element);
-    iterator erase(const iterator pos);
-
-    iterator begin();
-    const_iterator begin() const;
-    iterator end();
-    const_iterator end() const;
-    reverse_iterator rbegin();
-    const_reverse_iterator rbegin() const;
-    reverse_iterator rend();
-    const_reverse_iterator rend() const;
+    list(list&& other) :
+        start(other.start),
+        finish(other.finish),
+        sz(other.sz)
+    {
+        other.start = other.finish = nullptr;
+        other.sz = 0;
+    }
 
     template <typename TT>
-    friend void swap(deque<TT>& a, deque<TT>& b);
-private:
-    T *p{nullptr};
-    size_t start{0};
-    size_t sz{0};
-    size_t capacity{0};
+    list( std::initializer_list<TT> init) : list() {
+        for (TT i : init) {
+            push_back(i);
+        }
+    }
 
-    void ensure_capacity(int new_capacity);
-    void push_back_realloc(T const& element);
-    void push_front_realloc(T const& element);
+    list& operator = (list const& other) { // without precondition
+        list tmp = other;
+        swap(*this, tmp);
+        snode* cur = start;
+        while (cur != finish) {
+            cur->its.clear();
+            cur->cits.clear();
+            cur = cur->right;
+        }
+        return *this;
+    }
+
+    list& operator = (list&& other) {
+        list temp(std::move(other));
+        swap(temp, *this);
+        snode* cur = start;
+        while (cur != finish) {
+            cur->its.clear();
+            cur->cits.clear();
+            cur = cur->right;
+        }
+        other.sz = 0;
+        return *this;
+    }
+
+    bool empty() noexcept {
+        return sz == 0;
+    }
+
+    size_t size() noexcept {
+        return sz;
+    }
+
+    void clear() noexcept {
+        while (start != finish) {
+              invalid_node_iterators(start);
+            start = start->right;
+            delete start->left;
+        }
+        sz = 0;
+    }
+
+    void push_back(T const& value) {
+        snode *nnode = new node;
+        static_cast<node*>(nnode)->value = value;
+        nnode->left = finish->left;
+        nnode->right = finish;
+        if (nnode->left) nnode->left->right = nnode;
+        finish->left = nnode;
+        if (sz == 0) start = nnode;
+        sz++;
+    }
+
+    void push_front(T const& value) {
+        snode *nnode = new node;
+        static_cast<node*>(nnode)->value = value;
+        nnode->right = start;
+        start->left = nnode;
+        start = nnode;
+        sz++;
+    }
+
+    void pop_back() {
+        assert(sz != 0);
+        snode* lst = finish->left;
+        if (lst->left) lst->left->right = finish;
+        finish->left = lst->left;
+        invalid_node_iterators(lst);
+        delete lst;
+        lst = nullptr;
+        sz--;
+        if (sz == 0) {
+            start = finish;
+        }
+    }
+
+    void pop_front() {
+        assert(sz != 0);
+        start = start->right;
+        invalid_node_iterators(start->left);
+        delete start->left;
+        start->left = nullptr;
+        sz--;
+    }
+
+    T& front() {
+        assert(sz != 0);
+        return static_cast<node*>(start)->value;
+    }
+
+    T& back() {
+        assert(sz != 0);
+        return static_cast<node*>(finish->left)->value;
+    }
+
+    iterator begin() {
+        return iterator(start, this);
+    }
+
+    const_iterator begin() const {
+        return const_iterator(start, this);
+    }
+
+    iterator end() {
+        return iterator(finish, this);
+    }
+
+    const_iterator end() const {
+        return const_iterator(finish, this);
+    }
+
+    reverse_iterator rbegin() {
+        return reverse_iterator(end());
+    }
+
+    reverse_iterator rend() {
+        return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator rbegin() const {
+        return const_reverse_iterator(end());
+    }
+
+    const_reverse_iterator rend() const {
+        return const_reverse_iterator(begin());
+    }
+
+    void splice(const_iterator pos, list& x, const_iterator first, const_iterator last) {
+        assert(first.lst == last.lst);
+        assert(first.lst == &x);
+        assert(pos.lst == this);
+
+        snode*& b = first.current;
+        snode*& e = last.current;
+
+        snode* tmp = b;
+        while (tmp != first.lst->finish && tmp != e) {
+            tmp = tmp->right;
+            sz++;
+            x.sz--;
+        }
+        assert(tmp == e);
+
+        if (b->left)
+            b->left->right = e;
+        else
+            x.start = e;
+
+        if (pos.current->left) {
+            pos.current->left->right = b;
+            b->left = pos.current->left;
+        } else {
+            start = b;
+            b->left = nullptr;
+        }
+
+        pos.current->left = e->left;
+        if (e->left) e->left->right = pos.current;
+        e->left = b->left;
+
+        snode* cur = b;
+
+        while (cur != nullptr && cur != pos.current->left) {
+            if (cur == nullptr) {
+                assert(false);
+            }
+            invalid_node_iterators(cur);
+            cur = cur->right;
+        }
+        std::cout << (pos.current == nullptr) << std::endl;
+        assert(cur == pos.current->left);
+    }
+
+    void insert(const_iterator it, T const& value) {
+        assert(it.lst == this);
+        snode* nnode = new node;
+        static_cast<node*>(nnode)->value = value;
+        snode *& nxt = it.current;
+        nnode->left = nxt->left;
+        nnode->right = nxt;
+        nxt->left = nnode;
+        if (nnode->left) nnode->left->right = nnode;
+        else start = nnode;
+        sz++;
+    }
+
+    iterator erase(const_iterator iter) {
+        assert(iter.lst == this);
+        assert(sz != 0);
+        snode*& cur = iter.current;
+
+        invalid_node_iterators(cur);
+
+        snode* tmp = cur->right;
+
+        if (cur->left)
+            cur->left->right = cur->right;
+
+        if (cur->right)
+            cur->right->left = cur->left;
+
+        delete cur;
+        cur = nullptr;
+
+        if (!tmp->left) start = tmp;
+
+        return iterator(tmp, this);
+    }
+
+    friend void swap(list& lhs, list& rhs) {
+        using std::swap;
+        swap(lhs.start, rhs.start);
+        swap(lhs.finish, rhs.finish);
+        swap(lhs.sz, rhs.sz);
+    }
+
+    ~list() {
+        snode*& cur = start;
+        while (cur != finish) {
+            invalid_node_iterators(cur);
+            cur = cur->right;
+            delete cur->left;
+        }
+        delete cur;
+    }
+
+private:
+    struct snode {
+
+        snode() = default;
+
+        snode(snode* other) :
+            left(other->left),
+            right(other->right),
+            its(other->its),
+            cits(other->cits)
+        {}
+
+        snode* left {};
+        snode* right {};
+
+        std::vector<iterator*> its;
+        std::vector<const_iterator*> cits;
+
+
+        void add(const_iterator* it) {
+            cits.push_back(it);
+        }
+
+        void add(iterator* it) {
+            its.push_back(it);
+        }
+
+        void del(const_iterator* it) {
+            if (find(cits.begin(), cits.end(), it) != cits.end())
+                cits.erase(find(cits.begin(), cits.end(), it));
+            else {
+                std::cout << "del_const_iterator" << std::endl;
+                abort();
+            }
+        }
+
+        void del(iterator* it) {
+            if (find(its.begin(), its.end(), it) != its.end())
+                its.erase(find(its.begin(), its.end(), it));
+            else {
+                std::cout << "del_iterator" << std::endl;
+                abort();
+            }
+        }
+
+        virtual ~snode() {};
+    };
+
+    void invalid_node_iterators(snode*& cur) {
+        for (auto& it : cur->cits) {
+            it->is_valid = false;
+            it->lst = nullptr;
+        }
+        for (auto& it : cur->its) {
+            it->is_valid = false;
+            it->lst = nullptr;
+        }
+    }
+
+    struct node : public snode {
+        node() = default;
+
+        node(node* other) :
+            snode{other},
+            value(other->value)
+        {}
+
+        T value {};
+    };
+
+    snode* start {};
+    snode* finish {};
+
+    size_t sz {};
 
 };
 
-template<typename T>
-void initialize_data(T* distance, T* source, size_t sz);
+template <typename R> template <typename T>
+struct list<R>::iterator_impl {
 
-template<typename T>
-deque<T>::deque() {}
-
-template<typename T>
-deque<T>::deque(deque const& other)
-{
-    ensure_capacity(other.capacity);
-    if (other.start + other.sz <= other.capacity) {
-        initialize_data(p, other.p + other.start, other.sz);
-    } else {
-        initialize_data(p, other.p + other.start, other.capacity - other.start);
-        initialize_data(p + other.capacity - other.start, other.p, other.sz - (other.capacity - other.start));
-    }
-    sz = other.sz;
-}
-
-template<typename T>
-deque<T>::~deque() {
-//    if (std::is_trivially_destructible<T>::value) {
-//        return ;
-//    }
-    while (sz) {
-        p[start].~T();
-        (start += 1) %= capacity;
-        sz--;
+    ~iterator_impl() {
+        if (is_valid)
+            current->del(this);
     }
 
-    delete p;
-}
-
-template<typename T>
-deque<T>& deque<T>::operator =(deque const& other) {
-    deque temp(other);
-    swap(*this, temp);
-    return *this;
-}
-
-template<typename T>
-T& deque<T>::operator [](size_t pos) {
-    return p[(start + pos) % capacity];
-}
-
-template<typename T>
-T const& deque<T>::operator [](size_t pos) const {
-    return (p + (start + pos) % capacity);
-}
-
-template<typename T>
-bool deque<T>::empty() const {
-    return (sz == 0);
-}
-
-template<typename T>
-size_t deque<T>::size() const {
-    return sz;
-}
-
-template<typename T>
-void deque<T>::clear() {
-    if (start + sz <= capacity)
-        clear_data(p + start, sz);
-    else {
-        clear_data(p + start, capacity - sz);
-        clear_data(p, sz - (capacity - sz));
-    }
-}
-
-template<typename T>
-void deque<T>::push_back(T const& element) {
-    if (sz != capacity && sz != capacity - 1) {
-        new (p + (start + sz) % capacity) T(element);
-        // std::cerr << element << " " << *(p + (start + sz) % capacity) << std::endl;
-        sz++;
-    } else {
-        push_back_realloc(element);   // выделение новой памяти + push_back
-    }
-}
-
-template<typename T>
-void deque<T>::push_front(T const& element) {
-    if (sz != capacity && sz != capacity - 1) {
-        sz++;
-        if (start == 0)
-            start = capacity - 1;
-        else
-            start--;
-        new (p + start) T(element);
-    } else {
-        push_front_realloc(element);
-    }
-}
-
-
-template <typename T>
-void deque<T>::push_back_realloc(T const& element)
-{
-    deque<T> temp;
-    size_t new_capacity = (capacity == 0 ? 4 : (3 * capacity) / 2);
-    temp.ensure_capacity(new_capacity); // выделили помять для placement new
-    if (start + sz <= capacity) {
-        initialize_data(temp.p, p + start, sz);
-    } else {
-        initialize_data(temp.p, p + start, capacity - start);
-        initialize_data(temp.p + capacity - start, p, sz - (capacity - start));
+    iterator_impl(typename std::conditional<std::is_const<T>::value,
+                                            snode* const&,
+                                            snode*&>::type other, const list<R>* p) :
+        current(other),
+        lst(p) {
+        other->add(this);
     }
 
-    temp.start = 0;
-    temp.sz = sz;
-    temp.capacity = new_capacity;
-
-    temp.push_back(element);
-
-    swap(*this, temp);
-
-    assert(sz <= capacity);
-}
-
-template<typename T>
-void deque<T>::push_front_realloc(const T &element) {
-    deque<T> temp;
-    size_t new_capacity = (capacity == 0 ? 4 : (3 * capacity) / 2);
-    temp.ensure_capacity(new_capacity);
-    if (start + sz <= capacity) {
-        initialize_data(temp.p, p + start, sz);
-    } else {
-        initialize_data(temp.p, p + start, capacity - start);
-        initialize_data(temp.p + capacity - start, p, sz - (capacity - start));
+    iterator_impl& operator ++() {
+        assert(is_valid);
+        assert(lst->finish != current);
+        current->del(this);
+        current = current->right;
+        current->add(this);
+        return *this;
     }
 
-    temp.start = 0;
-    temp.sz = sz;
-    temp.capacity = new_capacity;
-
-    temp.push_front(element);
-    swap(*this, temp);
-}
-
-template<typename T>
-void deque<T>::pop_back() {
-    if (sz == 0) return ;
-    int pos = (start + sz - 1) % capacity;
-    p[pos].~T();
-    sz--;
-}
-
-template<typename T>
-void deque<T>::pop_front() {
-    if (sz == 0) return ;
-    p[start].~T();
-    sz--;
-    (start += 1) %= capacity;
-}
-
-template<typename T>
-T const& deque<T>::front() const {
-    return p[start];
-}
-
-template<typename T>
-T& deque<T>::front() {
-    return p[start];
-}
-
-template<typename T>
-T const& deque<T>::back() const {
-    return p[(start + sz - 1) % capacity];
-}
-
-template<typename T>
-T& deque<T>::back() {
-    return p[(start + sz - 1) % capacity];
-}
-
-template<typename T>
-void deque<T>::ensure_capacity(int new_capacity) {
-
-    if (new_capacity <= capacity) return ;
-
-    deque temp;
-
-    if (new_capacity != 0) {
-        temp.p = static_cast<T*>(operator new(new_capacity * sizeof(T)));
-        temp.capacity = new_capacity;
-        temp.start = 0;
-        temp.sz = sz;
+    iterator_impl operator ++(int) {
+        iterator_impl tmp = *this;
+        ++(*this);
+        return tmp;
     }
 
-    swap(*this, temp);
-}
-
-template<typename T>
-void initialize_data(T* distance, T* source, size_t sz) {
-    for (size_t i = 0; i < sz; ++i) {
-        new (distance + i) T(source[i]);
+    iterator_impl& operator --() {
+        assert(is_valid);
+        assert(current != lst->start);
+        current->del(this);
+        current = current->left;
+        current->add(this);
+        return *this;
     }
-}
 
-template<typename T>
-void swap(deque<T>& a, deque<T>& b) {
-    std::swap(a.p, b.p);
-    std::swap(a.start, b.start);
-    std::swap(a.sz, b.sz);
-    std::swap(a.capacity, b.capacity);
-}
-
-template<typename T>
-void clear_data(T* data, size_t sz,typename std::enable_if<!std::is_trivially_destructible<T>::value>::type* = nullptr) {
-    for (size_t i = sz; i != 0; --i) {
-        data[i - 1].~T();
+    iterator_impl operator --(int) {
+        iterator_impl tmp = *this;
+        --(*this);
+        return tmp;
     }
-}
 
-template<typename T>
-void clear_data(T* data, size_t sz, typename std::enable_if<std::is_trivially_destructible<T>::value>::type* = nullptr)
-{}
+    T& operator *() const { // ***
+        assert(is_valid);
+        assert(dynamic_cast<node*>(current) != nullptr);
+        return static_cast<node*>(current)->value;
+    }
 
-template<typename T>
-typename deque<T>::iterator deque<T>::begin() {
-    if (!p) return  iterator(p, p, capacity, start, sz, start);
-    return iterator(p + start, p, capacity, start, sz, start);
-}
+    friend bool operator ==(iterator_impl lhs, iterator_impl rhs) {
+        assert(lhs.is_valid && rhs.is_valid);
+        return (lhs.current == rhs.current);
+    }
 
-template<typename T>
-typename deque<T>::const_iterator deque<T>::begin() const {
-    if (!p) return const_iterator(p, p, capacity, start, sz, start);
-    return const_iterator(p + start, p, capacity, start, sz, start);
-}
+    friend bool operator !=(iterator_impl lhs, iterator_impl rhs) {
+        return !(lhs == rhs);
+    }
 
-template<typename T>
-typename deque<T>::iterator deque<T>::end() {
-    if (!p) return iterator(p, p, capacity, start + sz, sz, start);
-    return iterator(p + (start + sz) % capacity, p, capacity, (start + sz) % capacity, sz, start);
-}
+    template<typename TT>
+    iterator_impl(iterator_impl<TT> const& other,
+                  typename std::enable_if<std::is_same<T, const TT>::value>::type * = nullptr):
+        is_valid(other.is_valid),
+        current(other.current),
+        lst(other.lst)
+    {
+        current->add(this);
+    }
 
-template<typename T>
-typename deque<T>::const_iterator deque<T>::end() const {
-    if (!p) return const_iterator(p, p, capacity, (start + sz), sz, start);
-    return const_iterator(p + (start + sz) % capacity, p, capacity, (start + sz) % capacity, sz, start);
-}
+    iterator_impl(iterator_impl<T> const& other):
+        is_valid(other.is_valid),
+        current(other.current),
+        lst(other.lst)
+    {
+        current->add(this);
+    }
 
-template<typename T>
-typename deque<T>::reverse_iterator deque<T>::rbegin() {
-    return reverse_iterator(end());
-}
-
-template<typename T>
-typename deque<T>::const_reverse_iterator deque<T>::rbegin() const {
-    return const_reverse_iterator(end());
-}
-
-template<typename T>
-typename deque<T>::reverse_iterator deque<T>::rend() {
-    return reverse_iterator(begin());
-}
-
-template<typename T>
-typename deque<T>::const_reverse_iterator deque<T>::rend() const {
-    return const_reverse_iterator(begin());
-}
-
-template<typename T>
-typename deque<T>::iterator deque<T>::insert(const iterator it, const T& element) {
-
-    ptrdiff_t dist1 = it - begin();
-    ptrdiff_t dist2 = end() - it;
-    size_t pos = it.id;
-    T temp = element;
-    iterator iit(it);
-    if (dist1 >= dist2) {
-        iit--;
-        while (iit + 1 != begin() && iit != end()) {
-            std::swap(*iit, temp);
-            iit--;
+    template<typename TT, class = typename std::enable_if<std::is_same<T, const TT>::value>::type>
+    iterator_impl operator =(iterator_impl<TT> const& other) {
+        if (is_valid) {
+            current->del(this);
         }
-        push_front(temp);
-    } else {
-        while (iit != end()) {
-            std::swap(*iit, temp);
-            iit++;
-        }
-        push_back(temp);
+        is_valid = other.is_valid;
+        current = other.current;
+        lst = other.lst;
+        current->add(this);
+        return *this;
     }
-    return iterator(p + pos, p, capacity, pos, sz, start);
-}
 
-template<typename T>
-typename deque<T>::iterator deque<T>::erase(const iterator it) {
-    ptrdiff_t dist1 = it - begin();
-    ptrdiff_t dist2 = end() - it;
-    iterator iit(it);
-    if (dist1 > dist2) {
-        size_t pos = it.id + 1;
-        if (iit > begin()) {
-            while (iit != begin()) {
-                std::swap(*iit, *(iit - 1));
-                iit--;
-            }
+    iterator_impl operator =(iterator_impl<T> const& other) {
+        if (is_valid) {
+            current->del(this);
         }
-        clear_data(p + iit.id, 1);
-        sz--;
-        start++;
-        start %= capacity;
-        pos %= capacity;
-        return iterator(p + pos, p, capacity, pos, sz, start);
-    } else {
-        size_t pos = it.id;
-        if (iit < end()) {
-            while (iit + 1 != end()) {
-                std::swap(*iit, *(iit + 1));
-                iit++;
-            }
-        }
-        clear_data(p + iit.id, 1);
-        sz--;
-        return iterator(p + pos, p, capacity, pos, sz, start);
+        is_valid = other.is_valid;
+        current = other.current;
+        lst = other.lst;
+        current->add(this);
+        return *this;
     }
+
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+    using pointer = T*;
+    using reference = T&;
+    using iterator_category = std::bidirectional_iterator_tag;
+
+    friend list<R>;
+private:
+
+    bool is_valid {true};
+    snode* current {};
+    const list<R>* lst {};
+
+};
+
 }
-
-
-
-#endif // DEQUE
+#endif // LIST_H
