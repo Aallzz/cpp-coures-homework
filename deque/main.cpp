@@ -1,81 +1,72 @@
 #include <iostream>
-#include "deque.h"
-//#include "deque.cpp"
+#include <string>
+#include "list.h"
 
-using namespace std;
+using namespace exam;
 
-deque<int> d;
+template struct list<int>;
+template struct list<std::string>;
+template struct list<list<int>>;
 
-void check(deque<int> d) {
-    for (int i = 0; i < d.size(); ++i) {
-        cout << d[i] <<  " ";
+using std::cout;
+using std::endl;
+
+list<int> f(int start, int finish) {
+    list<int> res;
+    while (start != finish) {
+        res.push_back(start);
+        start++;
     }
-    cout << endl;
+    return res;
 }
 
 int main()
 {
-    for (int i = 0; i < 10; ++i) {
-        d.push_back(i);
-        check(d);
+    list<int> c;
+    c.push_back(1);
+    c.pop_front();
+    c.push_back(2);
+    c.pop_front();
+    for (int i = 0; i < 5; ++i) c.push_back(i);
+    list<int> b;
+    b.push_back(9);
+    b.push_back(10);
+    auto it = c.end();
+    auto iit = b.end();
+    c.splice(--(--it), b, b.begin(), --iit);
+    --(--it);
+    auto pit = it;
+    it = c.erase(it);
+    it = c.erase(c.erase(it));
+    cout << *it << endl;
+    c.insert(it, 11);
+//    c.clear();
+    list<int> d;
+    d = c;
+    b.push_front(12);
+    b.pop_back();
+//    b.pop_back();
+//    b.pop_front();
+//    cout << *it << endl;
+    d.splice(d.begin(), b, b.begin(), b.end());
+//    d.splice(c.begin(), b, b.begin(), b.end());
+    std::cout << "OK" << std::endl;
+    for (auto iit = d.rbegin(); iit != d.rend(); ++iit) {
+        cout << *iit << " ";
     }
-
-    for (int i = 10; i < 20; ++i) {
-         d.push_front(i);
-         check(d);
+    cout << endl;
+    for (auto it = b.begin(); it != b.end(); ++it) {
+        cout << *it << " ";
     }
+    cout << endl;
+    cout << *it << endl;
 
-    deque<int> b;
-
-    deque<int>::iterator it = d.begin();
-    while (it < d.end()) {
-        for (deque<int>::iterator iit = d.begin(); iit != d.end(); ++iit) {
-            cout << *iit << " ";
-        }
-        cout << endl;
-        it = d.erase(it);
+    c = f(20, 40);
+    for (auto i : c) {
+        cout << i << " ";
     }
+    cout << endl;
 
-    d.insert(d.begin(), 1);
-    check(d);
-    for (int i = 10; i < 20; ++i) {
-        d.insert(d.begin() + 1, i);
-        check(d);
-    }
-
-    for (int i = 0; i < 50; ++i) {
-        if (i % 2 == 0) d.pop_front();
-        else d.pop_back();
-    }
-
-    deque<int> q;
-    for (int i = 0; i < 20; ++i)
-    q.push_back(i);
-    for (deque<int>::iterator it = q.begin(); it != q.end(); ++it)
-    cout << *it << ' ';
-    cout << '\n';
-    for (deque<int>::reverse_iterator it = q.rbegin(); it != q.rend(); ++it)
-    cout << *it << ' ';
-
-    q.insert(q.begin() + 3, 100000);
-    q.insert(q.begin() + 17, 99999);
-
-    cout << '\n' << '\n';
-    for (deque<int>::iterator it = q.begin(); it != q.end(); ++it)
-    cout << *it << ' ';
-    cout << '\n';
-    for (deque<int>::reverse_iterator it = q.rbegin(); it != q.rend(); ++it)
-    cout << *it << ' ';
-    q.erase(q.begin());
-    q.erase(q.begin() + 10);
-    q.erase(q.begin() + 15);
-    cout << '\n' << '\n';
-    for (deque<int>::iterator it = q.begin(); it != q.end(); ++it)
-    cout << *it << ' ';
-    cout << '\n';
-    for (deque<int>::reverse_iterator it = q.rbegin(); it != q.rend(); ++it)
-    cout << *it << ' ';
-
+    list<int> l {1, 2, 3};
     return 0;
 }
-
