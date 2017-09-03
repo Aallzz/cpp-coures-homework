@@ -92,18 +92,19 @@ struct list {
         sz++;
     }
 
-    void pop_back(T const& value) {
-
+    void pop_back() {
+        assert(sz != 0);
         snode *&lst = finish->left;
-        lst->left->right = finish;
+        if (lst->left) lst->left->right = finish;
         finish->left = lst->left;
         for (auto& it : lst->its) it->is_valid = false, it->lst = nullptr;
         for (auto& it : lst->cits) it->is_valid = false, it->lst = nullptr;
         delete lst;
+        lst = nullptr;
         sz--;
     }
 
-    void pop_front(T const& value) {
+    void pop_front() {
         assert(sz != 0);
         start = start->right;
         for (auto& it : start->left->its) it->is_valid = false, it->lst = nullptr;
@@ -148,9 +149,8 @@ struct list {
 
         if (b->left)
             b->left->right = e;
-        else {
+        else
             x.start = e;
-        }
 
         if (pos.current->left) {
             pos.current->left->right = b;
@@ -165,7 +165,6 @@ struct list {
         e->left = b->left;
 
         snode* cur = b;
-
 
         while (cur != pos.current->left) {
             if (cur == nullptr) {
@@ -214,6 +213,7 @@ struct list {
 
         if (cur->left)
             cur->left->right = cur->right;
+
         if (cur->right)
             cur->right->left = cur->left;
 
@@ -333,6 +333,7 @@ struct list<R>::iterator_impl {
     }
 
     iterator_impl& operator ++() {
+        assert(is_valid);
         assert(lst->finish != current);
         current->del(this);
         current = current->right;
@@ -347,6 +348,7 @@ struct list<R>::iterator_impl {
     }
 
     iterator_impl& operator --() {
+        assert(is_valid);
         assert(current != lst->start);
         current->del(this);
         current = current->left;
@@ -391,6 +393,29 @@ struct list<R>::iterator_impl {
         lst(other.lst)
     {
         current->add(this);
+    }
+
+    template<typename TT, class = typename std::enable_if<std::is_same<T, const TT>::value>::type>
+    iterator_impl operator =(iterator_impl<TT> const& other) {
+        if (is_valid) {
+            current->del(this);
+        }
+        is_valid = other.is_valid;
+        current = other.current;
+        lst = other.lst;
+        current->add(this);
+        return *this;
+    }
+
+    iterator_impl operator =(iterator_impl<T> const& other) {
+        if (is_valid) {
+            current->del(this);
+        }
+        is_valid = other.is_valid;
+        current = other.current;
+        lst = other.lst;
+        current->add(this);
+        return *this;
     }
 
     using difference_type = std::ptrdiff_t;
