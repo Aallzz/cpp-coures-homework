@@ -235,7 +235,6 @@ struct list {
             invalid_node_iterators(cur);
             cur = cur->right;
         }
-        std::cout << (pos.current == nullptr) << std::endl;
         assert(cur == pos.current->left);
     }
 
