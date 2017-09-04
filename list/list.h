@@ -6,15 +6,12 @@
 #include <type_traits>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 namespace exam {
 
-using std::cout;
-using std::endl;
-
 template<typename T>
 struct list {
-
 
     template<typename TT>
     struct iterator_impl;
@@ -31,18 +28,43 @@ struct list {
     }
 
     list(list const& other) : // without precondition
+        sz(other.sz)
+    {
+        snode* cur = other.start;
+        snode* prev_node{};
+
+        while (cur != other.finish) {
+            snode* nnode = static_cast<snode*>(new node(static_cast<node*>(cur)));
+            assert(nnode != nullptr);
+            if (cur == other.start)
+                start = nnode;
+            else
+                prev_node->right = nnode;
+            nnode->left = prev_node;
+            cur = cur->right;
+            prev_node = nnode;
+        }
+
+        finish = new snode(other.finish);
+
+        finish->left = prev_node;
+        if (prev_node) prev_node->right = finish;
+    }
+
+    list(list&& other) :
         start(other.start),
         finish(other.finish),
         sz(other.sz)
     {
-        snode* cur = start;
-        while (cur != finish) {
-            snode* nnode = static_cast<snode*>(new node(static_cast<node*>(cur->right)));
-            cur->right = nnode;
-            nnode->left = cur;
-            cur = nnode;
+        other.start = other.finish = nullptr;
+        other.sz = 0;
+    }
+
+    template <typename TT>
+    list( std::initializer_list<TT> init) : list() {
+        for (TT i : init) {
+            push_back(i);
         }
-        if (cur) cur->right = finish;
     }
 
     list& operator = (list const& other) { // without precondition
@@ -52,7 +74,21 @@ struct list {
         while (cur != finish) {
             cur->its.clear();
             cur->cits.clear();
+            cur = cur->right;
         }
+        return *this;
+    }
+
+    list& operator = (list&& other) {
+        list temp(std::move(other));
+        swap(temp, *this);
+        snode* cur = start;
+        while (cur != finish) {
+            cur->its.clear();
+            cur->cits.clear();
+            cur = cur->right;
+        }
+        other.sz = 0;
         return *this;
     }
 
@@ -64,8 +100,9 @@ struct list {
         return sz;
     }
 
-    void clear() {
+    void clear() noexcept {
         while (start != finish) {
+              invalid_node_iterators(start);
             start = start->right;
             delete start->left;
         }
@@ -94,21 +131,22 @@ struct list {
 
     void pop_back() {
         assert(sz != 0);
-        snode *&lst = finish->left;
+        snode* lst = finish->left;
         if (lst->left) lst->left->right = finish;
         finish->left = lst->left;
-        for (auto& it : lst->its) it->is_valid = false, it->lst = nullptr;
-        for (auto& it : lst->cits) it->is_valid = false, it->lst = nullptr;
+        invalid_node_iterators(lst);
         delete lst;
         lst = nullptr;
         sz--;
+        if (sz == 0) {
+            start = finish;
+        }
     }
 
     void pop_front() {
         assert(sz != 0);
         start = start->right;
-        for (auto& it : start->left->its) it->is_valid = false, it->lst = nullptr;
-        for (auto& it : start->left->cits) it->is_valid = false, it->lst = nullptr;
+        invalid_node_iterators(start->left);
         delete start->left;
         start->left = nullptr;
         sz--;
@@ -140,12 +178,37 @@ struct list {
         return const_iterator(finish, this);
     }
 
+    reverse_iterator rbegin() {
+        return reverse_iterator(end());
+    }
+
+    reverse_iterator rend() {
+        return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator rbegin() const {
+        return const_reverse_iterator(end());
+    }
+
+    const_reverse_iterator rend() const {
+        return const_reverse_iterator(begin());
+    }
+
     void splice(const_iterator pos, list& x, const_iterator first, const_iterator last) {
         assert(first.lst == last.lst);
         assert(first.lst == &x);
+        assert(pos.lst == this);
 
         snode*& b = first.current;
         snode*& e = last.current;
+
+        snode* tmp = b;
+        while (tmp != first.lst->finish && tmp != e) {
+            tmp = tmp->right;
+            sz++;
+            x.sz--;
+        }
+        assert(tmp == e);
 
         if (b->left)
             b->left->right = e;
@@ -166,19 +229,15 @@ struct list {
 
         snode* cur = b;
 
-        while (cur != pos.current->left) {
+        while (cur != nullptr && cur != pos.current->left) {
             if (cur == nullptr) {
                 assert(false);
             }
-            for (auto& it : cur->its) it->lst = pos.lst;
-            for (auto& it : cur->cits) it->lst = pos.lst;
+            invalid_node_iterators(cur);
             cur = cur->right;
         }
-
-        snode* nnode = start;
-        while (nnode != finish) {
-            nnode = nnode->right;
-        }
+        std::cout << (pos.current == nullptr) << std::endl;
+        assert(cur == pos.current->left);
     }
 
     void insert(const_iterator it, T const& value) {
@@ -199,15 +258,7 @@ struct list {
         assert(sz != 0);
         snode*& cur = iter.current;
 
-        for (auto& it : cur->cits) {
-            it->is_valid = false;
-            it->lst = nullptr;
-        }
-
-        for (auto& it : cur->its) {
-            it->is_valid = false;
-            it->lst = nullptr;
-        }
+        invalid_node_iterators(cur);
 
         snode* tmp = cur->right;
 
@@ -225,7 +276,6 @@ struct list {
         return iterator(tmp, this);
     }
 
-
     friend void swap(list& lhs, list& rhs) {
         using std::swap;
         swap(lhs.start, rhs.start);
@@ -233,22 +283,29 @@ struct list {
         swap(lhs.sz, rhs.sz);
     }
 
+    friend std::ostream& operator << (std::ostream& cout, list const& data) {
+        cout << "[";
+        snode* cur = data.start;
+        while (cur != data.finish) {
+            cout << static_cast<node*>(cur)->value;
+            cur = cur->right;
+            if (cur != data.finish)
+                cout << ", ";
+        }
+        cout << "]";
+        return cout;
+    }
+
     ~list() {
         snode*& cur = start;
         while (cur != finish) {
-            for (auto& it : cur->cits) {
-                it->is_valid = false;
-                it->lst = nullptr;
-            }
-            for (auto& it : cur->its) {
-                it->is_valid = false;
-                it->lst = nullptr;
-            }
+            invalid_node_iterators(cur);
             cur = cur->right;
             delete cur->left;
         }
         delete cur;
     }
+
 
 private:
     struct snode {
@@ -281,7 +338,7 @@ private:
             if (find(cits.begin(), cits.end(), it) != cits.end())
                 cits.erase(find(cits.begin(), cits.end(), it));
             else {
-                cout << "del_const_iterator" << endl;
+                std::cout << "del_const_iterator" << std::endl;
                 abort();
             }
         }
@@ -290,7 +347,7 @@ private:
             if (find(its.begin(), its.end(), it) != its.end())
                 its.erase(find(its.begin(), its.end(), it));
             else {
-                cout << "del_iterator" << endl;
+                std::cout << "del_iterator" << std::endl;
                 abort();
             }
         }
@@ -298,6 +355,16 @@ private:
         virtual ~snode() {};
     };
 
+    void invalid_node_iterators(snode*& cur) {
+        for (auto& it : cur->cits) {
+            it->is_valid = false;
+            it->lst = nullptr;
+        }
+        for (auto& it : cur->its) {
+            it->is_valid = false;
+            it->lst = nullptr;
+        }
+    }
 
     struct node : public snode {
         node() = default;
@@ -325,10 +392,15 @@ struct list<R>::iterator_impl {
             current->del(this);
     }
 
-    iterator_impl(typename std::conditional<std::is_const<T>::value, snode* const&, snode*&>::type other, const list<R>* p) :
+    iterator_impl() :
+        is_valid {false}
+    {}
+
+    iterator_impl(typename std::conditional<std::is_const<T>::value,
+                                            snode* const&,
+                                            snode*&>::type other, const list<R>* p) :
         current(other),
-        lst(p)
-    {
+        lst(p) {
         other->add(this);
     }
 
@@ -425,7 +497,6 @@ struct list<R>::iterator_impl {
     using iterator_category = std::bidirectional_iterator_tag;
 
     friend list<R>;
-
 private:
 
     bool is_valid {true};
