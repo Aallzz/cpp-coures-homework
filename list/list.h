@@ -226,8 +226,9 @@ struct list {
         }
         assert(tmp == e);
 
-        if (b->left)
+        if (b->left) {
             b->left->right = e;
+        }
         else
             x.start = e;
 
@@ -243,16 +244,15 @@ struct list {
         if (e->left) e->left->right = pos.current;
         e->left = b->left;
 
-        snode* cur = b;
-
-        while (cur != nullptr && cur != pos.current->left) {
-            if (cur == nullptr) {
-                assert(false);
-            }
-            invalid_node_iterators(cur);
-            cur = cur->right;
-        }
-        assert(cur == pos.current->left);
+//        while (cur != nullptr && cur != pos.current->left) {
+//            if (cur == nullptr) {
+//                assert(false);
+//            }
+////            invalid_node_iterators(cur);
+////            remove_iterators(cur);
+//            cur = cur->right;
+//        }
+//        assert(cur == pos.current->left);
     }
 
     void insert(const_iterator it, T const& value) {
@@ -311,15 +311,21 @@ struct list {
     }
 
     ~list() {
-        snode*& cur = start;
+        snode* cur = start;
+//        std::cout << std::endl;
+//        std::cout << static_cast<node*>(start->right)->value << std::endl;
+//        std::cout << std::endl;
         while (cur != finish) {
             invalid_node_iterators(cur);
             remove_iterators(cur);
-            cur = cur->right;
-            delete cur->left;
+//            std::cout << static_cast<node*>(cur)->value << std::endl;
+            snode* tmp = cur->right;
+            delete cur;
+            cur = tmp;
         }
         invalid_node_iterators(finish);
         remove_iterators(finish);
+//        std::cout << std::endl;
         delete cur;
     }
 
