@@ -354,12 +354,13 @@ private:
         }
 
         void add(iterator* it) {
-            iterator* cur = its;
 
+            iterator* cur = its;
             if (!cur) {
                 its = it;
                 return ;
             }
+
             while (cur->next)
                 cur = cur->next;
             cur->next = it;
@@ -374,6 +375,7 @@ private:
                         prev->next = cur->next;
                     else
                         cits = cur->next;
+                    cur->next = nullptr;
                     return ;
                 }
                 prev = cur;
@@ -392,6 +394,7 @@ private:
                         prev->next = cur->next;
                     else
                         its = cur->next;
+                    cur->next = nullptr;
                     return ;
                 }
                 prev = cur;
@@ -519,6 +522,7 @@ struct list<R>::iterator_impl {
         current(other.current),
         lst(other.lst)
     {
+
         if (is_valid)
             current->add(this);
     }
