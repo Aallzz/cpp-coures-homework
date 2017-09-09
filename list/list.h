@@ -10,6 +10,8 @@
 
 namespace exam {
 
+constexpr size_t N {100};
+
 template<typename T>
 struct list {
 
@@ -21,13 +23,13 @@ struct list {
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-    list() { // without precondition
+    list() {
         start = finish = new snode;
         assert(start != nullptr);
         assert(start->left == nullptr && start->right == nullptr);
     }
 
-    list(list const& other) : // without precondition
+    list(list const& other) :
         sz(other.sz)
     {
         snode* cur = other.start;
@@ -35,6 +37,7 @@ struct list {
 
         while (cur != other.finish) {
             snode* nnode = static_cast<snode*>(new node(static_cast<node*>(cur)));
+            remove_iterators(nnode);
             assert(nnode != nullptr);
             if (cur == other.start)
                 start = nnode;
@@ -46,8 +49,11 @@ struct list {
         }
 
         finish = new snode(other.finish);
+        remove_iterators(finish);
 
-        finish->left = prev_node;
+        if (!sz) start = finish;
+
+        if (finish->left) finish->left = prev_node;
         if (prev_node) prev_node->right = finish;
     }
 
@@ -71,11 +77,11 @@ struct list {
         list tmp = other;
         swap(*this, tmp);
         snode* cur = start;
-        while (cur != finish) {
-            cur->its.clear();
-            cur->cits.clear();
+        while (cur && cur != finish) {
+            remove_iterators(cur);
             cur = cur->right;
         }
+        remove_iterators(finish);
         return *this;
     }
 
@@ -83,11 +89,11 @@ struct list {
         list temp(std::move(other));
         swap(temp, *this);
         snode* cur = start;
-        while (cur != finish) {
-            cur->its.clear();
-            cur->cits.clear();
+        while (cur && cur != finish) {
+            remove_iterators(cur);
             cur = cur->right;
         }
+        remove_iterators(cur);
         other.sz = 0;
         return *this;
     }
@@ -158,6 +164,16 @@ struct list {
     }
 
     T& back() {
+        assert(sz != 0);
+        return static_cast<node*>(finish->left)->value;
+    }
+
+    T const& front() const {
+        assert(sz != 0);
+        return static_cast<node*>(start)->value;
+    }
+
+    T const& back() const {
         assert(sz != 0);
         return static_cast<node*>(finish->left)->value;
     }
@@ -236,7 +252,6 @@ struct list {
             invalid_node_iterators(cur);
             cur = cur->right;
         }
-        std::cout << (pos.current == nullptr) << std::endl;
         assert(cur == pos.current->left);
     }
 
@@ -257,7 +272,6 @@ struct list {
         assert(iter.lst == this);
         assert(sz != 0);
         snode*& cur = iter.current;
-
         invalid_node_iterators(cur);
 
         snode* tmp = cur->right;
@@ -300,9 +314,12 @@ struct list {
         snode*& cur = start;
         while (cur != finish) {
             invalid_node_iterators(cur);
+            remove_iterators(cur);
             cur = cur->right;
             delete cur->left;
         }
+        invalid_node_iterators(finish);
+        remove_iterators(finish);
         delete cur;
     }
 
@@ -322,48 +339,91 @@ private:
         snode* left {};
         snode* right {};
 
-        std::vector<iterator*> its;
-        std::vector<const_iterator*> cits;
-
+        iterator* its {};
+        const_iterator *cits {};
 
         void add(const_iterator* it) {
-            cits.push_back(it);
+            const_iterator* cur = cits;
+            if (!cur) {
+                cits = it;
+                return ;
+            }
+            while (cur->next)
+                cur = cur->next;
+            cur->next = it;
         }
 
         void add(iterator* it) {
-            its.push_back(it);
+            iterator* cur = its;
+
+            if (!cur) {
+                its = it;
+                return ;
+            }
+            while (cur->next)
+                cur = cur->next;
+            cur->next = it;
         }
 
         void del(const_iterator* it) {
-            if (find(cits.begin(), cits.end(), it) != cits.end())
-                cits.erase(find(cits.begin(), cits.end(), it));
-            else {
-                std::cout << "del_const_iterator" << std::endl;
-                abort();
+            const_iterator* cur = cits;
+            const_iterator* prev {};
+            while (cur) {
+                if (cur == it) {
+                    if (prev)
+                        prev->next = cur->next;
+                    else
+                        cits = cur->next;
+                    return ;
+                }
+                prev = cur;
+                cur = cur->next;
             }
+            std::cout << "del_const_iterator" << std::endl;
+            abort();
         }
 
         void del(iterator* it) {
-            if (find(its.begin(), its.end(), it) != its.end())
-                its.erase(find(its.begin(), its.end(), it));
-            else {
-                std::cout << "del_iterator" << std::endl;
-                abort();
+            iterator* cur = its;
+            iterator* prev {};
+            while (cur) {
+                if (cur == it) {
+                    if (prev)
+                        prev->next = cur->next;
+                    else
+                        its = cur->next;
+                    return ;
+                }
+                prev = cur;
+                cur = cur->next;
             }
+            std::cout << "del_iterator" << std::endl;
+            abort();
         }
 
         virtual ~snode() {};
     };
 
     void invalid_node_iterators(snode*& cur) {
-        for (auto& it : cur->cits) {
-            it->is_valid = false;
-            it->lst = nullptr;
+        if (!cur) return ;
+        iterator* i = cur->its;
+        while (i) {
+            i->is_valid = false;
+            i->lst = nullptr;
+            i = i->next;
         }
-        for (auto& it : cur->its) {
-            it->is_valid = false;
-            it->lst = nullptr;
+        const_iterator* ci = cur->cits;
+        while (ci) {
+            ci->is_valid = false;
+            ci->lst = nullptr;
+            ci = ci->next;
         }
+    }
+
+    void remove_iterators(snode*& cur) {
+        if (!cur) return ;
+        cur->its = nullptr;
+        cur->cits = nullptr;
     }
 
     struct node : public snode {
@@ -388,8 +448,9 @@ template <typename R> template <typename T>
 struct list<R>::iterator_impl {
 
     ~iterator_impl() {
-        if (is_valid)
+        if (is_valid) {
             current->del(this);
+        }
     }
 
     iterator_impl() :
@@ -400,7 +461,9 @@ struct list<R>::iterator_impl {
                                             snode* const&,
                                             snode*&>::type other, const list<R>* p) :
         current(other),
-        lst(p) {
+        lst(p)
+    {
+        is_valid = true;
         other->add(this);
     }
 
@@ -456,7 +519,8 @@ struct list<R>::iterator_impl {
         current(other.current),
         lst(other.lst)
     {
-        current->add(this);
+        if (is_valid)
+            current->add(this);
     }
 
     iterator_impl(iterator_impl<T> const& other):
@@ -464,7 +528,8 @@ struct list<R>::iterator_impl {
         current(other.current),
         lst(other.lst)
     {
-        current->add(this);
+        if (is_valid)
+            current->add(this);
     }
 
     template<typename TT, class = typename std::enable_if<std::is_same<T, const TT>::value>::type>
@@ -502,7 +567,7 @@ private:
     bool is_valid {true};
     snode* current {};
     const list<R>* lst {};
-
+    iterator_impl<T>* next {};
 };
 
 }
