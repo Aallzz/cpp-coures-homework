@@ -215,8 +215,8 @@ struct list {
         assert(first.lst == &x);
         assert(pos.lst == this);
 
-        snode*& b = first.current;
-        snode*& e = last.current;
+        snode* b = first.current;
+        snode* e = last.current;
 
         snode* tmp = b;
         while (tmp != first.lst->finish && tmp != e) {
@@ -226,6 +226,7 @@ struct list {
         }
         assert(tmp == e);
 
+        tmp = b->left;
         if (b->left) {
             b->left->right = e;
         }
@@ -242,7 +243,7 @@ struct list {
 
         pos.current->left = e->left;
         if (e->left) e->left->right = pos.current;
-        e->left = b->left;
+        e->left = tmp;
 
 //        while (cur != nullptr && cur != pos.current->left) {
 //            if (cur == nullptr) {
