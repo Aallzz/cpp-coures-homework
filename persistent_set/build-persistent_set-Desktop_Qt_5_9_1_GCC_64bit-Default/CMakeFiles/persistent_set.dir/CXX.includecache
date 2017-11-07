@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/main.cpp
+iostream
+-
+persistent_set.h
+/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/persistent_set.h
+
+/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/persistent_set.h
+memory
+-
+

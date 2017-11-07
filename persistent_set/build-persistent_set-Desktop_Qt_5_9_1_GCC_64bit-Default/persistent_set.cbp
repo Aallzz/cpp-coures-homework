@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="persistent_set" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="persistent_set">
+         <Option output="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/persistent_set" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 persistent_set" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="persistent_set/fast">
+         <Option output="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/persistent_set" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/alexander/study/main/programming/C++/programs /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 persistent_set/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/alexander/study/main/programming/C++/programs\ /persistent_set/build-persistent_set-Desktop_Qt_5_9_1_GCC_64bit-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/main.cpp">
+         <Option target="persistent_set"/>
+      </Unit>
+      <Unit filename="/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/persistent_set.h">
+         <Option target="persistent_set"/>
+      </Unit>
+      <Unit filename="/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/smart_linked_pointer.h">
+         <Option target="persistent_set"/>
+      </Unit>
+      <Unit filename="/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/smart_shared_pointer.h">
+         <Option target="persistent_set"/>
+      </Unit>
+      <Unit filename="/home/alexander/study/main/programming/C++/programs /persistent_set/persistent_set/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

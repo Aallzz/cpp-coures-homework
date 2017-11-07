@@ -1,0 +1,1 @@
+/usr/bin/g++    -std=c++14 -fsanitize=address -fpermissive  -Wall   CMakeFiles/persistent_set.dir/main.cpp.o  -o persistent_set -rdynamic 
