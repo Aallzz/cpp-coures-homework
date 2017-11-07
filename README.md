@@ -1,1 +1,1 @@
-# cpp-coures-homework
+# cpp-course-homework
